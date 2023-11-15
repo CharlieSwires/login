@@ -39,53 +39,67 @@ public class UserController {
 
 	@Autowired
 	private HelloWorldService helloWorldService;
-    private final UserService userService;
+	private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+	public UserController(UserService userService) {
+		this.userService = userService;
+	}
 
-    @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody UserRegistrationRequest request) {
-        String username = request.getUsername();
-        String password = request.getPassword();
-        String[] roles = request.getRoles();
+	@PostMapping("/register")
+	public ResponseEntity<User> registerUser(@RequestBody UserRegistrationRequest request) {
+		String username = request.getUsername();
+		String password = request.getPassword();
+		String[] roles = request.getRoles();
 
-        User existingUser = userService.findByUsername(username);
-        if (existingUser != null) {
-            // Handle duplicate username
-            return ResponseEntity.badRequest().build();
-        }
+		User existingUser = userService.findByUsername(username);
+		if (existingUser != null) {
+			// Handle duplicate username
+			return ResponseEntity.badRequest().build();
+		}
 
-        User newUser = userService.createUser(username, password, roles);
-        return ResponseEntity.ok(newUser);
-    }
+		User newUser = userService.createUser(username, password, roles);
+		return ResponseEntity.ok(newUser);
+	}
 	@RequestMapping("/")
 	@ResponseBody
 	public String helloWorld() {
 		return this.helloWorldService.getHelloMessage();
 	}
+
+	@GetMapping("/public")
+	public String publicEndpoint() {
+		return "Public endpoint accessible to all";
+	}
 	
-    @GetMapping("/public")
-    public String publicEndpoint() {
-        return "Public endpoint accessible to all";
-    }
+	@PostMapping("/login")
+	public String[] loginEndpoint(@RequestBody UserRegistrationRequest request) {
+		if (request != null && request.getUsername() != null && !request.getUsername().isEmpty()
+				&& request.getPassword() != null && !request.getPassword().isEmpty()) {
+			User user = userService.findByUsername(request.getUsername());
+			if (request.getPassword().equals(user.getHash())) {
+				return user.getRoles();
+			}
 
-    @GetMapping("/developer")
-    @PreAuthorize("hasRole('DEVELOPER')")
-    public String developerEndpoint() {
-        return "Developer endpoint accessible to users with the 'DEVELOPER' role";
-    }
+		}
+		String[] result = {"Login failed", (String)null};
+		return result;
+	}
 
-    @PostMapping("/superuser")
-    @Secured("ROLE_SUPERUSER")
-    public String superuserEndpoint() {
-        return "Superuser endpoint accessible to users with the 'SUPERUSER' role";
-    }
+	@GetMapping("/developer")
+	@PreAuthorize("hasRole('DEVELOPER')")
+	public String developerEndpoint() {
+		return "Developer endpoint accessible to users with the 'DEVELOPER' role";
+	}
 
-    @DeleteMapping("/user")
-    @PreAuthorize("hasRole('USER')")
-    public String userEndpoint() {
-        return "User endpoint accessible to users with the 'USER' role";
-    }
+	@PostMapping("/superuser")
+	@Secured("ROLE_SUPERUSER")
+	public String superuserEndpoint() {
+		return "Superuser endpoint accessible to users with the 'SUPERUSER' role";
+	}
+
+	@DeleteMapping("/user")
+	@PreAuthorize("hasRole('USER')")
+	public String userEndpoint() {
+		return "User endpoint accessible to users with the 'USER' role";
+	}
 }

@@ -1,4 +1,3 @@
 FROM tomcat:9.0
-ADD target/login-0.0.1-SNAPSHOT.jar /usr/local/tomcat/webapps/login.war
-CMD ["npm i dotenv", "run"]
+ADD target/login.war /usr/local/tomcat/webapps/.
 CMD ["catalina.sh", "run"]
