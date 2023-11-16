@@ -21,6 +21,14 @@ public class User {
 	private String username;
 	private String[] roles;
 	private String hash;
+	private byte[] salt;
+	
+	public void setSalt(byte[] salt) {
+		this.salt = salt;		
+	}
+	public byte[] getSalt() {
+		return salt;
+	}
 	public String getId() {
 		return id;
 	}
@@ -47,9 +55,8 @@ public class User {
 	}
 	@Override
 	public String toString() {
-		return "MongoBean [id=" + id + ", username=" + username + ", roles=" + Arrays.toString(roles) + ", hash=" + hash
-				+ "]";
+		return "User [id=" + id + ", username=" + username + ", roles=" + Arrays.toString(roles) + ", hash=" + hash
+				+ ", salt=" + Arrays.toString(salt) + "]";
 	}
-
 
 }

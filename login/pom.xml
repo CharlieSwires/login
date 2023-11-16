@@ -57,6 +57,11 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 <version>3.0.0</version>
 			</dependency>
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcprov-debug-jdk15on</artifactId>
+    <version>1.65</version>
+</dependency>
 	</dependencies>
 	<build>
 	<finalName>${project.artifactId}</finalName>

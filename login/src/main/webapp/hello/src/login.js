@@ -17,7 +17,7 @@ const Login = () => {
             });
 
             // Extract user roles from the response
-            const roles = response.data.roles;
+            const roles = response.data;
 
             // Handle roles accordingly (e.g., redirect based on role)
             if (roles.includes('DEVELOPER')) {

@@ -16,10 +16,14 @@
 
 package login.tomcat.web;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,12 +51,15 @@ public class UserController {
 
 	@PostMapping("/register")
 	public ResponseEntity<User> registerUser(@RequestBody UserRegistrationRequest request) {
+		System.out.println(request.toString());
 		String username = request.getUsername();
 		String password = request.getPassword();
 		String[] roles = request.getRoles();
+		System.out.println("register");
+		Optional<User> existingUser = userService.findByUsername(username);
+		if (!existingUser.isEmpty()) {
+			System.out.println("Bad");
 
-		User existingUser = userService.findByUsername(username);
-		if (existingUser != null) {
 			// Handle duplicate username
 			return ResponseEntity.badRequest().build();
 		}
@@ -73,16 +80,22 @@ public class UserController {
 	
 	@PostMapping("/login")
 	public String[] loginEndpoint(@RequestBody UserRegistrationRequest request) {
+		System.out.println("/login "+request.toString());
 		if (request != null && request.getUsername() != null && !request.getUsername().isEmpty()
 				&& request.getPassword() != null && !request.getPassword().isEmpty()) {
-			User user = userService.findByUsername(request.getUsername());
-			if (request.getPassword().equals(user.getHash())) {
-				return user.getRoles();
+			Optional<User> user = userService.findByUsername(request.getUsername());
+			System.out.println(user.get().toString());
+			System.out.println("hash = "+(userService.sha256(user.get().getSalt(), request.getPassword())));
+			System.out.println("request.getPassword() = "+request.getPassword());
+			if (!user.isEmpty() && (userService.sha256(user.get().getSalt(), request.getPassword())).equals(user.get().getHash())) {
+				return user.get().getRoles();
 			}
 
+		} else {
+			String[] result = {"Login failed", (String)null};
+			return result;
 		}
-		String[] result = {"Login failed", (String)null};
-		return result;
+		return null;
 	}
 
 	@GetMapping("/developer")
