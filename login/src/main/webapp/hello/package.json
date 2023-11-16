@@ -1,6 +1,6 @@
 {
   "homepage": "http://localhost:8882/login/hello/build",
-  "name": "jso-bo-app",
+  "name": "login",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

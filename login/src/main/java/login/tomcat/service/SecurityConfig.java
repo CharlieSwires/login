@@ -13,36 +13,36 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //SecurityConfig.java
 @Configuration
 @EnableWebSecurity
+
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
- @Override
- protected void configure(HttpSecurity http) throws Exception {
-     http
-         .cors().and().csrf().disable()
-         .authorizeRequests()
-             .antMatchers("/public/**").permitAll()
-             .anyRequest().authenticated()
-             .and()
-         .formLogin()
-             .loginProcessingUrl("/login")
-             .permitAll()
-             .and()
-         .logout()
-             .permitAll();
- }
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .cors().and().csrf().disable()
+            .authorizeRequests()
+                .antMatchers("/public/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+            .formLogin()
+                .loginProcessingUrl("/api/example/login")
+                .permitAll()
+                .and()
+            .logout()
+                .permitAll();
+    }
 
- @Autowired
- public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-     auth.inMemoryAuthentication()
-         .withUser("developer").password(passwordEncoder().encode("devPassword")).roles("DEVELOPER")
-         .and()
-         .withUser("superuser").password(passwordEncoder().encode("superPassword")).roles("SUPERUSER")
-         .and()
-         .withUser("user").password(passwordEncoder().encode("userPassword")).roles("USER");
- }
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+            .withUser("developer").password(passwordEncoder().encode("devPassword")).roles("DEVELOPER")
+            .and()
+            .withUser("superuser").password(passwordEncoder().encode("superPassword")).roles("SUPERUSER")
+            .and()
+            .withUser("user").password(passwordEncoder().encode("userPassword")).roles("USER");
+    }
 
- @Bean
- public PasswordEncoder passwordEncoder() {
-     return new BCryptPasswordEncoder();
- }
+    public static PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

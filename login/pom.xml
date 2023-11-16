@@ -19,7 +19,7 @@
 		<url>http://www.spring.io</url>
 	</organization>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>8</java.version>
 		<main.basedir>${basedir}/../..</main.basedir>
 	</properties>
 	<dependencies>

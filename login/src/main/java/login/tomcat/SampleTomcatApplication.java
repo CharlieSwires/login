@@ -16,41 +16,20 @@
 
 package login.tomcat;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import com.mongodb.UserRepository;
+@SpringBootApplication
+@EnableMongoRepositories(basePackageClasses= {UserRepository.class})
+public class SampleTomcatApplication extends SpringBootServletInitializer{
 
-@Configuration
-@EnableAutoConfiguration
-@ComponentScan
-public class SampleTomcatApplication {
+//@SpringBootApplication
+//public class MainApp{
+//   public static void main(String[] args) {
+//       SpringApplication.run(MainApp.class, args);
+//   }
 
-	private static Log logger = LogFactory.getLog(SampleTomcatApplication.class);
-
-	public static void main(String[] args) throws Exception {
-		SpringApplication.run(SampleTomcatApplication.class, args);
-	}
-
-	@Bean
-	protected ServletContextListener listener() {
-		return new ServletContextListener() {
-			@Override
-			public void contextInitialized(ServletContextEvent sce) {
-				logger.info("ServletContext initialized");
-			}
-
-			@Override
-			public void contextDestroyed(ServletContextEvent sce) {
-				logger.info("ServletContext destroyed");
-			}
-		};
-	}
 
 }
