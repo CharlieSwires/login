@@ -1,0 +1,10 @@
+        label, input {
+            font-size: 2em; /* Adjust as needed */
+        }
+
+        /* Double the width and height for input */
+        input {
+            width: 2em; /* Adjust as needed */
+            height: 2em; /* Adjust as needed */
+            border-radius: 10px; /* Rounded corners */
+        }

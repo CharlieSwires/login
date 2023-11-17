@@ -1,10 +1,8 @@
-// Login.js
 import React, { useState } from 'react';
-import { createRoot } from 'react-dom/client';
 import axios from 'axios';
-import './logon.css';
+import './App.css';
 
-const Login = () => {
+function App() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -37,8 +35,8 @@ const Login = () => {
     };
 
     return (
-        <div>
-            <h2>Login</h2>
+    <div className="App">
+            <h1>Login</h1>
             <form onSubmit={handleSubmit}>
                 <label>
                     Username:
@@ -57,13 +55,5 @@ const Login = () => {
         </div>
     );
 };
-// Ensure the DOM is ready before rendering the React component
-document.addEventListener('DOMContentLoaded', () => {
-    const userEl = document.getElementById('user');
-    if (userEl) {
-        const root = createRoot(userEl);
-        root.render(<Login />);
-    }
-});
 
-export default Login;
+export default App;
