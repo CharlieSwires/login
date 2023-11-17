@@ -14,6 +14,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
 	public User() {
 	}
+	public User(String username, String[] roles, String hash, byte[] salt) {
+		super();
+		this.username = username;
+		this.roles = roles;
+		this.hash = hash;
+		this.salt = salt;
+	}
+
 
 	//in the clear
 	@Id

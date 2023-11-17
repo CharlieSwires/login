@@ -22,7 +22,7 @@ URL</p>
 deploy
 ------
 <p>docker build --tag login:latest .</p>
-<p>docker run --name container4 -d -p 8882:8080 login:latest</p>
+<p>docker run  --env-file ./env.list --name container4 -d -p 8882:8080 login:latest</p>
 
 
 browser

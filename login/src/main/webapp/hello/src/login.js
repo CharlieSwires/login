@@ -51,6 +51,8 @@ const Login = () => {
                 <br />
                 <button type="submit">Login</button>
             </form>
+            <br />
+            <a href="http://localhost:8882/login/logout">Logout</a>
         </div>
     );
 };

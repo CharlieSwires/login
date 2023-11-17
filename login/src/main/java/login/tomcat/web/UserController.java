@@ -18,12 +18,14 @@ package login.tomcat.web;
 
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,12 +60,8 @@ public class UserController {
 		System.out.println("register");
 		Optional<User> existingUser = userService.findByUsername(username);
 		if (!existingUser.isEmpty()) {
-			System.out.println("Bad");
-
-			// Handle duplicate username
-			return ResponseEntity.badRequest().build();
+			userService.deleteByUsername(username);
 		}
-
 		User newUser = userService.createUser(username, password, roles);
 		return ResponseEntity.ok(newUser);
 	}
@@ -78,6 +76,7 @@ public class UserController {
 		return "Public endpoint accessible to all";
 	}
 	
+	@SuppressWarnings("static-access")
 	@PostMapping("/login")
 	public String[] loginEndpoint(@RequestBody UserRegistrationRequest request) {
 		System.out.println("/login "+request.toString());
@@ -97,7 +96,21 @@ public class UserController {
 		}
 		return null;
 	}
-
+//	@GetMapping("/logout")
+//    public ResponseEntity<String> logoutEndpoint(HttpServletRequest request, HttpServletResponse response) {
+//        // Perform any additional logic before logout (if needed)
+//
+//        // Invalidate the HttpSession (this is done by Spring Security's logout, but you can do it manually if needed)
+//        HttpSession session = request.getSession(false);
+//        if (session != null) {
+//            session.invalidate();
+//        }
+//
+//        // Perform any additional logic after logout (if needed)
+//
+//        // Return a response, e.g., success message
+//        return ResponseEntity.ok("Logout successful");
+//    }
 	@GetMapping("/developer")
 	@PreAuthorize("hasRole('DEVELOPER')")
 	public String developerEndpoint() {
