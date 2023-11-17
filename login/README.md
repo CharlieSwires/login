@@ -32,5 +32,5 @@ browser
 RESTful
 -------
 
-<p>http://localhost:8882/login/api/example/register</p>
+<p>http://localhost:8882/login//register</p>
 

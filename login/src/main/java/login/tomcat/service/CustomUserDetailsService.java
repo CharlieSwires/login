@@ -1,10 +1,11 @@
 package login.tomcat.service;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,11 +19,17 @@ import com.mongodb.User;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+    Logger log = LoggerFactory.getLogger(CustomUserDetailsService.class);
+
 	@Autowired
 	private UserService userService;
 	
 	public class MyUserDetails implements UserDetails{
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -3390836699036979826L;
 		private String username;
 		private String password;
 		private List<GrantedAuthority> authorities;
@@ -72,7 +79,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 		}
 		
 	}
-    public UserDetails loadUserByUsername(String username, String password) throws UsernameNotFoundException {
+    @SuppressWarnings("static-access")
+	public UserDetails loadUserByUsername(String username, String password) throws UsernameNotFoundException {
         // Simulate loading user details from a data source (e.g., database)
         // In a real application, you would fetch user details based on the provided username
 		if (username != null && !username.isEmpty()
@@ -83,7 +91,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	            for (String role : user.get().getRoles()) {
 	                    authorities.add(new SimpleGrantedAuthority("ROLE_"+role));
 	            }
-
+	            log.info(username + ": " + user.get().getRoles() );
 				UserDetails ud = new MyUserDetails(username, user.get().getHash(), authorities);
 		        return ud;
 			}
@@ -104,6 +112,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             for (String role : user.get().getRoles()) {
                     authorities.add(new SimpleGrantedAuthority("ROLE_"+role));
             }
+            log.info(username + "2: " + user.get().getRoles() );
 
 			UserDetails ud = new MyUserDetails(username, user.get().getHash(), authorities);
 	        return ud;

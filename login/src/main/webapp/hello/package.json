@@ -1,5 +1,5 @@
 {
-  "homepage": "http://localhost:8882/login/hello/build",
+  "homepage": "http://localhost:8882/login/hello/build/index.html",
   "name": "login",
   "version": "0.1.0",
   "private": true,

@@ -13,6 +13,8 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.mongodb.User;
@@ -20,6 +22,7 @@ import com.mongodb.UserRepository;
 
 @Service
 public class UserService {
+    Logger log = LoggerFactory.getLogger(UserService.class);
 
 	private final UserRepository userRepository;
 
@@ -28,7 +31,7 @@ public class UserService {
 	}
 
 	public User createUser(String username, String password, String[] roles) {
-		System.out.println("createUser");
+		log.info("createUser " + username);
 		User user = new User();
 		user.setUsername(username);
 		user.setRoles(roles);
@@ -38,7 +41,7 @@ public class UserService {
 		user.setSalt(salt);
 		String hashedPassword = sha256(salt, password);
 		user.setHash(hashedPassword);
-		System.out.println(user.toString());
+		log.debug(user.toString());
 		return userRepository.save(user);
 	}
 
@@ -50,6 +53,10 @@ public class UserService {
 		return userRepository.deleteByUsername(username);
 
 	}
+    public User save(User entity) {
+    	return userRepository.save(entity);
+    }
+
 	/**
 	 * SecureRandom random = new SecureRandom();
 	 * byte salt[] = new salt[20];
@@ -80,6 +87,11 @@ public class UserService {
 
 		return b64.encodeToString(keyBC.getEncoded());
 
+	}
+
+	public void deleteById(String id) {
+    	userRepository.deleteById(id);
+    	return;
 	}
 
 

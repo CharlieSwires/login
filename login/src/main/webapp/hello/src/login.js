@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import axios from 'axios';
+import './logon.css';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -11,7 +12,7 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:8882/login/api/example/login', {
+            const response = await axios.post('http://localhost:8882/login/login', {
                 username,
                 password,
             });
