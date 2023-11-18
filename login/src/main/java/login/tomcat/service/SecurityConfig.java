@@ -15,7 +15,7 @@ import com.mongodb.User;
 //SecurityConfig.java
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
 
 
@@ -31,10 +31,18 @@ public class SecurityConfig {
     private static final String SUPER_USERNAME = "superuser";
     private static final String [] SUPER_ROLES = {"SUPERUSER"};
     private static String SUPER_PASSWORD;
+    private final CustomUserDetailsService customUserDetailsService;
+
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(customUserDetailsService);
+    }
 
     @Autowired
-    public SecurityConfig(UserService userService) {
+    public SecurityConfig(UserService userService, CustomUserDetailsService customUserDetailsService) {
         this.userService = userService;
+        this.customUserDetailsService = customUserDetailsService;
         Random rand = new Random(0);
         rand.nextBytes(salt1);
         rand.nextBytes(salt2);
@@ -63,10 +71,6 @@ public class SecurityConfig {
     }
 
 
-    @Configuration
-    public static class ApiSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
-
-
         @Override
         public void configure(HttpSecurity http) throws Exception {
             http
@@ -77,11 +81,12 @@ public class SecurityConfig {
                     //.anyRequest().authenticated()
                     .and()
                 .formLogin()
+                	.loginPage("http://localhost:8882/login/hello/build/index.html")
                     .loginProcessingUrl("/login")
                     .permitAll()
                     .and()
                 .logout()
-            	.logoutUrl("http://localhost:8882/login/logout")
+            	.logoutUrl("http://localhost:8882/login/api/V1/logout")
                 .logoutSuccessUrl("http://localhost:8882/login/hello/build/index.html") // Redirect to this URL after successful logout
                 .invalidateHttpSession(true) // Invalidate the HttpSession
                 .deleteCookies("JSESSIONID") // Delete cookies (e.g., JSESSIONID)
@@ -89,7 +94,7 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable();
         }
-    }   
+     
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

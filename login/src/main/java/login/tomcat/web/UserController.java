@@ -42,7 +42,7 @@ import login.tomcat.service.HelloWorldService;
 import login.tomcat.service.UserService;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/V1/")
 public class UserController {
     Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -55,7 +55,7 @@ public class UserController {
 	}
 
 	@PostMapping("register")
-	public ResponseEntity<User> registerUser(@RequestBody UserRegistrationRequest request) {
+	public ResponseEntity<UserResponse> registerUser(@RequestBody UserRegistrationRequest request) {
 		log.debug(request.toString());
 		String username = request.getUsername();
 		String password = request.getPassword();
@@ -66,7 +66,7 @@ public class UserController {
 			userService.deleteByUsername(username);
 		}
 		User newUser = userService.createUser(username, password, roles);
-		return ResponseEntity.ok(newUser);
+		return ResponseEntity.ok(new UserResponse(newUser.getRoles()));
 	}
 	@RequestMapping("helloWorld")
 	@ResponseBody
@@ -83,7 +83,7 @@ public class UserController {
 	
 	@SuppressWarnings("static-access")
 	@PostMapping("login")
-	public String[] loginEndpoint(@RequestBody UserRegistrationRequest request) {
+	public ResponseEntity<UserResponse> loginEndpoint(@RequestBody UserRegistrationRequest request) {
 		log.info("/login ");
 		log.debug(request.toString());
 		if (request != null && request.getUsername() != null && !request.getUsername().isEmpty()
@@ -93,15 +93,16 @@ public class UserController {
 			log.debug("hash = "+(userService.sha256(user.get().getSalt(), request.getPassword())));
 			log.debug("request.getPassword() = "+request.getPassword());
 			if (!user.isEmpty() && (userService.sha256(user.get().getSalt(), request.getPassword())).equals(user.get().getHash())) {
-				return user.get().getRoles();
+				return ResponseEntity.ok(new UserResponse(user.get().getRoles()));
 			}
 
 		} else {
 			String[] result = {"Login failed", (String)null};
-			return result;
+			return ResponseEntity.ok(new UserResponse(result));
 		}
 		return null;
 	}
+	
 	@GetMapping("logout")
     public ResponseEntity<String> logoutEndpoint(HttpServletRequest request, HttpServletResponse response) {
 		log.info("/logout");
