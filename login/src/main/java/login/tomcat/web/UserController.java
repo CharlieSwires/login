@@ -145,7 +145,7 @@ public class UserController {
 		return "Developer endpoint accessible to users with the 'DEVELOPER' role";
 	}
 
-	@PostMapping("/superuser")
+	@GetMapping("/superuser")
 	@Secured("ROLE_SUPERUSER")
 	public String superuserEndpoint() {
 		log.info("/superuser");
@@ -153,7 +153,7 @@ public class UserController {
 		return "Superuser endpoint accessible to users with the 'SUPERUSER' role";
 	}
 
-	@DeleteMapping("/user")
+	@GetMapping("/user")
 	@PreAuthorize("hasRole('USER')")
 	public String userEndpoint() {
 		log.info("/user");
