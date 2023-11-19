@@ -1,4 +1,4 @@
-package login.tomcat.service;
+package login.tomcat.web;
 
 import java.util.Collection;
 import java.util.List;

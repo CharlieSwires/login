@@ -15,53 +15,43 @@ import org.springframework.stereotype.Service;
 
 import com.mongodb.User;
 
+import login.tomcat.web.MyUserDetails;
+
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    Logger log = LoggerFactory.getLogger(CustomUserDetailsService.class);
+	Logger log = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
 	@Autowired
 	private UserService userService;
-	
 
-//    @SuppressWarnings("static-access")
-//	public UserDetails loadUserByUsername(String username, String password) throws UsernameNotFoundException {
-//        // Simulate loading user details from a data source (e.g., database)
-//        // In a real application, you would fetch user details based on the provided username
-//		if (username != null && !username.isEmpty()
-//				&& password != null && !password.isEmpty()) {
-//			Optional<User> user = userService.findByUsername(username);
-//			if (!user.isEmpty() && (userService.sha256(user.get().getSalt(), password)).equals(user.get().getHash())) {
-//	            List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-//	            for (String role : user.get().getRoles()) {
-//	                    authorities.add(new SimpleGrantedAuthority("ROLE_"+role));
-//	            }
-//	            log.info(username + ": " + user.get().getRoles() );
-//				UserDetails ud = new MyUserDetails(username, user.get().getHash(), authorities);
-//		        return ud;
-//			}
-//		}
-//        throw new UsernameNotFoundException("User not found with username: " + username);
-//
-//	
-//    }
+
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		log.info("loadUserByUsername: "+username);
+
 		if (username != null && !username.isEmpty()) {
 			Optional<User> user = userService.findByUsername(username);
-			if (user.isEmpty()) {
-		        throw new UsernameNotFoundException("User not found with username: " + username);
+			if (user.isEmpty() || !user.isPresent()) {
+				throw new UsernameNotFoundException("User not found with username: " + username);
 			}
-            List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-            for (String role : user.get().getRoles()) {
-                    authorities.add(new SimpleGrantedAuthority("ROLE_"+role));
-            }
-            log.info(username + "2: " + user.get().getRoles() );
+			List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+			if (user.get().getRoles() != null) {
+				for (String role : user.get().getRoles()) {
+					log.info("role: "+role);
 
+					authorities.add(new SimpleGrantedAuthority(role));
+				}
+				log.info(username + ": " + user.get().toString() );
+			}
 			UserDetails ud = new MyUserDetails(username, user.get().getHash(), authorities);
-	        return ud;
+			return ud;
 		}
-		return null;
+		else {
+			log.error("No username given");
+
+			throw new UsernameNotFoundException("No username given");
+		}
 	}
 }

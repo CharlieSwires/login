@@ -5,7 +5,7 @@
 		<!-- Your own application should inherit from spring-boot-starter-parent -->
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.4</version>
+		<version>2.6.3</version>
 	</parent>
 	<artifactId>login</artifactId>
 	<groupId>1</groupId>
@@ -19,7 +19,7 @@
 		<url>http://www.spring.io</url>
 	</organization>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>1.8</java.version>
 		<main.basedir>${basedir}/../..</main.basedir>
 		<spring-security.version>3.2.0.RELEASE</spring-security.version>
 	</properties>
@@ -49,36 +49,55 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
 </dependency>
+
 <dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-config</artifactId>
-        <version>${spring-security.version}</version>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-mongodb</artifactId>
 </dependency>
-    <dependency>
-        <groupId>org.springframework.security</groupId>
-        <artifactId>spring-security-web</artifactId>
-        <version>${spring-security.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.security</groupId>
-        <artifactId>spring-security-core</artifactId>
-        <version>${spring-security.version}</version>
-    </dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-mongodb</artifactId>
-		</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-<version>3.0.0</version>
-			</dependency>
 <dependency>
     <groupId>org.bouncycastle</groupId>
     <artifactId>bcprov-debug-jdk15on</artifactId>
     <version>1.65</version>
 </dependency>
-	</dependencies>
+    <!-- Remove these unless explicitly needed -->
+    <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-config</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-core</artifactId>
+    </dependency>
+
+    <!-- Remove these unless explicitly needed -->
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.fasterxml.jackson.datatype</groupId>
+        <artifactId>jackson-datatype-jsr310</artifactId>
+    </dependency>
+
+    <!-- Remove this unless explicitly needed -->
+    <dependency>
+        <groupId>com.googlecode.json-simple</groupId>
+        <artifactId>json-simple</artifactId>
+        <version>1.1.1</version>
+    </dependency>
+    
+    <!-- Remove unless explicitly needed -->
+    <dependency>
+        <groupId>org.hibernate.validator</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>6.1.2.Final</version>
+    </dependency>
+  
+</dependencies>	
 	<build>
 	<finalName>${project.artifactId}</finalName>
         <plugins><plugin>
@@ -97,31 +116,20 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <archive>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-war-plugin</artifactId>
+        		<configuration>
+					<archive>
                         <manifest>
                         	<addClasspath>true</addClasspath>
-                            <mainClass>login.tomcat.SampleTomcatApplication</mainClass>
+                            <mainClass>login.SampleTomcatApplication</mainClass>
                         </manifest>
                     </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                 </configuration>
-                <executions>
-                    <execution>
-                        <id>assemble-all</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
+					
+          			<failOnMissingWebXml>false</failOnMissingWebXml>
+        		</configuration>
+       		</plugin>
+ 
 		</plugins>
 	</build>
 </project>

@@ -5,6 +5,9 @@ import java.util.Arrays;
 public class UserResponse {
 	private String [] roles;
 
+	public UserResponse() {
+	}
+
 	public String[] getRoles() {
 		return roles;
 	}

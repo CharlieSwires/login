@@ -14,7 +14,7 @@ function App() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 try {
- const response = await fetch('http://localhost:8882/login/api/V1/login', {
+ const response = await fetch('http://localhost:8882/login/api/V1/loginAttempt', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

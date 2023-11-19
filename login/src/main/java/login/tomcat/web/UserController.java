@@ -25,24 +25,29 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mongodb.User;
 
+import login.tomcat.service.CustomUserDetailsService;
 import login.tomcat.service.HelloWorldService;
 import login.tomcat.service.UserService;
 
 @RestController
-@RequestMapping("/api/V1/")
+@RequestMapping("/api/V1")
 public class UserController {
     Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -53,13 +58,23 @@ public class UserController {
 	public UserController(UserService userService) {
 		this.userService = userService;
 	}
-
-	@PostMapping("register")
+	@Autowired
+	private CustomUserDetailsService customService;
+		
+	@RequestMapping(path = "/register", method = RequestMethod.POST, consumes = "application/json",
+			produces = "application/json")
+	@PreAuthorize("hasRole('SUPERUSER')")
 	public ResponseEntity<UserResponse> registerUser(@RequestBody UserRegistrationRequest request) {
 		log.debug(request.toString());
 		String username = request.getUsername();
 		String password = request.getPassword();
 		String[] roles = request.getRoles();
+		if (username == null || username.isBlank() || username .isEmpty() ||
+				password == null || password.isBlank() || password.isEmpty() ||
+				roles == null || roles.length == 0) {
+			log.error(request.toString());
+			throw new IllegalArgumentException(request.toString());
+		}
 		log.info("register");
 		Optional<User> existingUser = userService.findByUsername(username);
 		if (!existingUser.isEmpty()) {
@@ -68,43 +83,46 @@ public class UserController {
 		User newUser = userService.createUser(username, password, roles);
 		return ResponseEntity.ok(new UserResponse(newUser.getRoles()));
 	}
-	@RequestMapping("helloWorld")
-	@ResponseBody
+	@RequestMapping("/helloWorld")
 	public String helloWorld() {
 		log.info("/helloWorld");
 		return this.helloWorldService.getHelloMessage();
 	}
 
-	@GetMapping("public")
+	@GetMapping("/public")
 	public String publicEndpoint() {
 		log.info("/public");
 		return "Public endpoint accessible to all";
 	}
 	
-	@SuppressWarnings("static-access")
-	@PostMapping("login")
-	public ResponseEntity<UserResponse> loginEndpoint(@RequestBody UserRegistrationRequest request) {
-		log.info("/login ");
-		log.debug(request.toString());
-		if (request != null && request.getUsername() != null && !request.getUsername().isEmpty()
-				&& request.getPassword() != null && !request.getPassword().isEmpty()) {
-			Optional<User> user = userService.findByUsername(request.getUsername());
-			log.debug(user.get().toString());
-			log.debug("hash = "+(userService.sha256(user.get().getSalt(), request.getPassword())));
-			log.debug("request.getPassword() = "+request.getPassword());
-			if (!user.isEmpty() && (userService.sha256(user.get().getSalt(), request.getPassword())).equals(user.get().getHash())) {
-				return ResponseEntity.ok(new UserResponse(user.get().getRoles()));
-			}
+	@RequestMapping(path = "/loginAttempt", method = RequestMethod.POST, consumes = "application/json",
+			produces = "application/json")
+	public ResponseEntity<UserResponse> loginEndpoint(@RequestBody UserRegistrationRequest request, HttpServletRequest httpRequest) {
+	    log.info("/loginAttempt");
+	    log.debug(request.toString());
 
-		} else {
-			String[] result = {"Login failed", (String)null};
-			return ResponseEntity.ok(new UserResponse(result));
-		}
-		return null;
+	    if (request != null && !request.getUsername().isEmpty() && !request.getPassword().isEmpty()) {
+	        Optional<User> user = userService.findByUsername(request.getUsername());
+
+	        if (user.isPresent() && !user.get().getHash().isEmpty() &&
+	            UserService.sha256(user.get().getSalt(), request.getPassword()).equals(user.get().getHash())) {
+	            UserDetails ud = customService.loadUserByUsername(user.get().getUsername());
+
+	            // Manually create a session
+	            HttpSession session = httpRequest.getSession(true);
+
+	            // Set authentication details
+	            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(ud, null, ud.getAuthorities()));
+
+	            return ResponseEntity.ok(new UserResponse(user.get().getRoles()));
+	        }
+	    }
+
+	    // Return unauthorized status
+	    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
 	}
-	
-	@GetMapping("logout")
-    public ResponseEntity<String> logoutEndpoint(HttpServletRequest request, HttpServletResponse response) {
+	@GetMapping("/logout")
+	public ResponseEntity<String> logoutEndpoint(HttpServletRequest request, HttpServletResponse response) {
 		log.info("/logout");
         // Perform any additional logic before logout (if needed)
 
@@ -119,7 +137,7 @@ public class UserController {
         // Return a response, e.g., success message
         return ResponseEntity.ok("Logout successful");
     }
-	@GetMapping("developer")
+	@GetMapping("/developer")
 	@PreAuthorize("hasRole('DEVELOPER')")
 	public String developerEndpoint() {
 		log.info("/developer");
@@ -127,7 +145,7 @@ public class UserController {
 		return "Developer endpoint accessible to users with the 'DEVELOPER' role";
 	}
 
-	@PostMapping("superuser")
+	@PostMapping("/superuser")
 	@Secured("ROLE_SUPERUSER")
 	public String superuserEndpoint() {
 		log.info("/superuser");
@@ -135,7 +153,7 @@ public class UserController {
 		return "Superuser endpoint accessible to users with the 'SUPERUSER' role";
 	}
 
-	@DeleteMapping("user")
+	@DeleteMapping("/user")
 	@PreAuthorize("hasRole('USER')")
 	public String userEndpoint() {
 		log.info("/user");
