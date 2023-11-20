@@ -12,11 +12,13 @@ build
 <p>cd ../../../..</p>
 <p>you'll need an application.properties file with the DB username and password
 URL</p>
+<p>you'll also need an env.list file with the passwords of superuser, 
+user and developer default users.</p>
 <p>mvn package</p>
 
-<p>produces login-0.0.1-SNAPSHOT.war in target</p>
+<p>produces login.war in target</p>
 
-<p>7zip login-0.0.1-SNAPSHOT.war</p>
+<p>7zip login.war</p>
 <p>remove the hello/node-nodules</p>
 
 deploy
@@ -32,5 +34,9 @@ browser
 RESTful
 -------
 
-<p>http://localhost:8882/login//register</p>
+<p>http://localhost:8882/login/api/V1/register POST</p>
+<p>http://localhost:8882/login/api/V1/developer GET</p>
+<p>http://localhost:8882/login/api/V1/user GET</p>
+<p>http://localhost:8882/login/api/V1/superuser GET</p>
+<p>http://localhost:8882/login/api/V1/loginAttempt POST</p>
 
