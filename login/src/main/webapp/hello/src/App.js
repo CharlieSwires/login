@@ -5,6 +5,9 @@ function App() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [roles, setUserRoles] = useState([]);
+    const [roles3, setRole3] = useState('');
+    const [roles4, setRole4] = useState('');
+    const [roles5, setRole5] = useState('');
 
     useEffect(() => {
         // This effect will run whenever userRoles change
@@ -46,6 +49,8 @@ try {
     const registerSubmit = async (e) => {
         e.preventDefault();
     try {
+   const inputRoles2 = [roles3,roles4,roles5];
+	console.log("inputRoles2 "+inputRoles2);
  const response = await fetch('http://localhost:8882/login/api/V1/register', {
         method: 'POST',
         headers: {
@@ -54,7 +59,7 @@ try {
         body: JSON.stringify({
             username,
             password,
-            roles
+            roles: inputRoles2
         }),
     });
 
@@ -65,12 +70,9 @@ try {
 
     // Parse the JSON response
     const data = await response.json();
+    setUserRoles(inputRoles2);
 
-    // Extract user roles from the response
-    const inputRoles = data.roles;
-
-      setUserRoles(inputRoles);
-
+ 
  } catch (error) {
     // Handle fetch or other errors
     console.error('Login failed', error);
@@ -123,7 +125,9 @@ try {
                 <br />
                 <label>
                     Roles:
-                    <input type="text" value={roles} />
+                    <input type="text" value={roles3} onChange={(e) =>setRole3(e.target.value)}/>
+                    <input type="text" value={roles4} onChange={(e) =>setRole4(e.target.value)}/>
+                    <input type="text" value={roles5} onChange={(e) =>setRole5(e.target.value)}/>
                 </label>
                 <br />
                 <button type="submit">Register</button>

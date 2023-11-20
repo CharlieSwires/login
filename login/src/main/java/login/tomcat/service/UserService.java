@@ -41,7 +41,7 @@ public class UserService {
 		user.setSalt(salt);
 		String hashedPassword = sha256(salt, password);
 		user.setHash(hashedPassword);
-		log.debug(user.toString());
+		log.info(user.toString());
 		return userRepository.save(user);
 	}
 

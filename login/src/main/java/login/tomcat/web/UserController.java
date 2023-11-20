@@ -16,6 +16,8 @@
 
 package login.tomcat.web;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,9 +34,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -68,7 +68,11 @@ public class UserController {
 		log.debug(request.toString());
 		String username = request.getUsername();
 		String password = request.getPassword();
-		String[] roles = request.getRoles();
+		List<String> rl = new ArrayList<>();
+		for (String role : request.getRoles()) {
+			rl.add(role);
+		}
+		String[] roles = rl.toArray(new String[0]);
 		if (username == null || username.isBlank() || username .isEmpty() ||
 				password == null || password.isBlank() || password.isEmpty() ||
 				roles == null || roles.length == 0) {
@@ -81,6 +85,7 @@ public class UserController {
 			userService.deleteByUsername(username);
 		}
 		User newUser = userService.createUser(username, password, roles);
+		log.info(newUser.toString());
 		return ResponseEntity.ok(new UserResponse(newUser.getRoles()));
 	}
 	@RequestMapping("/helloWorld")
