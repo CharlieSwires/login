@@ -1,11 +1,11 @@
 package login.tomcat.service;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private static final String SUPER_USERNAME = "superuser";
 	private static final String [] SUPER_ROLES = {"SUPERUSER"};
 	private static String SUPER_PASSWORD;
+	public static HashSet<String> VALID_ROLES = new HashSet<>();
 	private final CustomUserDetailsService customUserDetailsService;
 
 	@Autowired
@@ -45,7 +46,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		DEV_PASSWORD = System.getenv("DEV_PASSWORD");
 		USER_PASSWORD = System.getenv("USER_PASSWORD");
 		SUPER_PASSWORD = System.getenv("SUPER_PASSWORD");
-
+		VALID_ROLES.add(DEV_ROLES[0]);
+		VALID_ROLES.add(SUPER_ROLES[0]);
+		VALID_ROLES.add(USER_ROLES[0]);
+		
 		initializeUsers();
 	}
 

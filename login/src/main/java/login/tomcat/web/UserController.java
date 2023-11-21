@@ -44,6 +44,7 @@ import com.mongodb.User;
 
 import login.tomcat.service.CustomUserDetailsService;
 import login.tomcat.service.HelloWorldService;
+import login.tomcat.service.SecurityConfig;
 import login.tomcat.service.UserService;
 
 @RestController
@@ -70,7 +71,8 @@ public class UserController {
 		String password = request.getPassword();
 		List<String> rl = new ArrayList<>();
 		for (String role : request.getRoles()) {
-			rl.add(role);
+			if (role != null && !role.isBlank() && !role.isEmpty() &&
+					SecurityConfig.VALID_ROLES.contains(role)) rl.add(role);
 		}
 		String[] roles = rl.toArray(new String[0]);
 		if (username == null || username.isBlank() || username .isEmpty() ||
