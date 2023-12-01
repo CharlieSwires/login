@@ -43,7 +43,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 					authorities.add(new SimpleGrantedAuthority(role));
 				}
-				log.info(username + ": " + user.get().toString() );
+				log.debug(username + ": " + user.get().toString() );
 			}
 			UserDetails ud = new MyUserDetails(username, user.get().getHash(), authorities);
 			return ud;

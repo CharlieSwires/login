@@ -87,7 +87,7 @@ public class UserController {
 			userService.deleteByUsername(username);
 		}
 		User newUser = userService.createUser(username, password, roles);
-		log.info(newUser.toString());
+		log.debug(newUser.toString());
 		return ResponseEntity.ok(new UserResponse(newUser.getRoles()));
 	}
 	@RequestMapping("/helloWorld")
