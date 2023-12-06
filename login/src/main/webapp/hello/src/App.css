@@ -67,6 +67,7 @@ a {
   margin-bottom: 20px;
   width: 50%;
   margin: auto;
+  background-color: #cfe8cf;
 }
 
 @keyframes App-logo-spin {
