@@ -82,6 +82,8 @@ try {
 
     return (
     <div className="App">
+          <div className="form-container">
+
             <h1>Login</h1>
             <form onSubmit={handleSubmit}>
                 <label>
@@ -96,6 +98,7 @@ try {
                 <br />
                 <button type="submit">Login</button>
             </form>
+            </div>
             <br />
             {roles.length > 0 && (
                 <div>
@@ -111,6 +114,9 @@ try {
             <br />
             <a href="http://localhost:8882/login/api/V1/logout">Logout</a>
             <br />
+            <br />
+                  <div className="form-container">
+
                <h1>Register</h1>
             <form onSubmit={registerSubmit}>
                 <label>
@@ -132,6 +138,7 @@ try {
                 <br />
                 <button type="submit">Register</button>
             </form>
+            </div>
             <br />
  
         </div>
