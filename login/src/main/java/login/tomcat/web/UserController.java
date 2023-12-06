@@ -16,9 +16,9 @@
 
 package login.tomcat.web;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,7 +69,7 @@ public class UserController {
 		log.debug(request.toString());
 		String username = request.getUsername();
 		String password = request.getPassword();
-		List<String> rl = new ArrayList<>();
+		Set<String> rl = new HashSet<String>();
 		for (String role : request.getRoles()) {
 			if (role != null && !role.isBlank() && !role.isEmpty() &&
 					SecurityConfig.VALID_ROLES.contains(role)) rl.add(role);

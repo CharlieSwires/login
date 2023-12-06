@@ -52,6 +52,7 @@ button {
   border-radius: 10px; /* Rounded corners */
   padding: 5px; /* Add some padding for space */
   margin: 5px;
+  background-color: #8fef8f;
 }
 a {
   font-size: 2em; /* Adjust as needed */
@@ -67,7 +68,7 @@ a {
   margin-bottom: 20px;
   width: 50%;
   margin: auto;
-  background-color: #cfe8cf;
+  background-color: #9fcfff;
 }
 
 @keyframes App-logo-spin {
