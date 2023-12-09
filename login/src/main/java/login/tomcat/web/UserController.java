@@ -32,6 +32,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,32 +64,45 @@ public class UserController {
 	private CustomUserDetailsService customService;
 		
 	@RequestMapping(path = "/register", method = RequestMethod.POST, consumes = "application/json",
-			produces = "application/json")
-	@PreAuthorize("hasRole('SUPERUSER')")
-	public ResponseEntity<UserResponse> registerUser(@RequestBody UserRegistrationRequest request) {
-		log.debug(request.toString());
-		String username = request.getUsername();
-		String password = request.getPassword();
-		Set<String> rl = new HashSet<String>();
-		for (String role : request.getRoles()) {
-			if (role != null && !role.isBlank() && !role.isEmpty() &&
-					SecurityConfig.VALID_ROLES.contains(role)) rl.add(role);
-		}
-		String[] roles = rl.toArray(new String[0]);
-		if (username == null || username.isBlank() || username .isEmpty() ||
-				password == null || password.isBlank() || password.isEmpty() ||
-				roles == null || roles.length == 0) {
-			log.error(request.toString());
-			throw new IllegalArgumentException(request.toString());
-		}
-		log.info("register");
-		Optional<User> existingUser = userService.findByUsername(username);
-		if (!existingUser.isEmpty()) {
-			userService.deleteByUsername(username);
-		}
-		User newUser = userService.createUser(username, password, roles);
-		log.debug(newUser.toString());
-		return ResponseEntity.ok(new UserResponse(newUser.getRoles()));
+	        produces = "application/json")
+	@Secured("ROLE_SUPERUSER")
+	public ResponseEntity<UserResponse> registerUser(@RequestBody UserRegistrationRequest request,
+	                                                 Authentication authentication) {
+	    log.debug(request.toString());
+
+	    // Check if the authenticated user has the "SUPERUSER" role
+	    if (authentication.getAuthorities().stream().anyMatch(grantedAuthority ->
+	            grantedAuthority.getAuthority().equals("SUPERUSER"))) {
+
+	        String username = request.getUsername();
+	        String password = request.getPassword();
+	        Set<String> rl = new HashSet<>();
+	        for (String role : request.getRoles()) {
+	            if (role != null && !role.isBlank() && !role.isEmpty() &&
+	                    SecurityConfig.VALID_ROLES.contains(role)) rl.add(role);
+	        }
+	        String[] roles = rl.toArray(new String[0]);
+
+	        if (username == null || username.isBlank() || username.isEmpty() ||
+	                password == null || password.isBlank() || password.isEmpty() ||
+	                roles == null || roles.length == 0) {
+	            log.error(request.toString());
+	            throw new IllegalArgumentException(request.toString());
+	        }
+
+	        log.info("register");
+	        Optional<User> existingUser = userService.findByUsername(username);
+	        if (!existingUser.isEmpty()) {
+	            userService.deleteByUsername(username);
+	        }
+
+	        User newUser = userService.createUser(username, password, roles);
+	        log.debug(newUser.toString());
+	        return ResponseEntity.ok(new UserResponse(newUser.getRoles()));
+	    } else {
+	        // Return unauthorized status if the authenticated user is not a superuser
+	        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+	    }
 	}
 	@RequestMapping("/helloWorld")
 	public String helloWorld() {

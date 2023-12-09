@@ -43,6 +43,7 @@ try {
  } catch (error) {
     // Handle fetch or other errors
     console.error('Login failed', error);
+    alert("Login Failed " + error);
 }
 
     };
@@ -75,7 +76,9 @@ try {
  
  } catch (error) {
     // Handle fetch or other errors
-    console.error('Login failed', error);
+    console.error('Registration failed', error);
+    alert("Registration Failed " + error);
+
 }
 
     };
