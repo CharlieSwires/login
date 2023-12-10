@@ -13,7 +13,22 @@ function App() {
         // This effect will run whenever userRoles change
         console.log('User roles have changed:', roles);
     }, [roles]); // Only run the effect when userRoles change
-
+const getErrorMessage = (status) => {
+  switch (status) {
+    case 400:
+      return "Bad Request: The server could not understand the request.";
+    case 401:
+      return "Unauthorized: Authentication failed or user lacks necessary permissions.";
+    case 403:
+      return "Forbidden: The server understood the request, but refuses to authorize it.";
+    case 404:
+      return "Not Found: The requested resource could not be found on the server.";
+    case 500:
+      return "Internal Server Error: The server encountered a situation it doesn't know how to handle.";
+    default:
+      return `HTTP error! Status: ${status}`;
+  }
+};
     const handleSubmit = async (e) => {
         e.preventDefault();
 try {
@@ -30,7 +45,7 @@ try {
 
     if (!response.ok) {
         // Handle non-successful response, e.g., throw an error or handle accordingly
-        throw new Error(`HTTP error! Status: ${response.status}`);
+      throw new Error(getErrorMessage(response.status));
     }
 
     // Parse the JSON response
@@ -43,7 +58,7 @@ try {
  } catch (error) {
     // Handle fetch or other errors
     console.error('Login failed', error);
-    alert("Login Failed " + error);
+    alert("Login Failed " + error.message);
 }
 
     };
@@ -66,7 +81,7 @@ try {
 
     if (!response.ok) {
         // Handle non-successful response, e.g., throw an error or handle accordingly
-        throw new Error(`HTTP error! Status: ${response.status}`);
+      throw new Error(getErrorMessage(response.status));
     }
 
     // Parse the JSON response
@@ -77,7 +92,7 @@ try {
  } catch (error) {
     // Handle fetch or other errors
     console.error('Registration failed', error);
-    alert("Registration Failed " + error);
+    alert("Registration Failed " + error.message);
 
 }
 
