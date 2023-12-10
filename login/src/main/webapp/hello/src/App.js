@@ -16,17 +16,17 @@ function App() {
 const getErrorMessage = (status) => {
   switch (status) {
     case 400:
-      return "Bad Request: The server could not understand the request.";
+      return "Bad Request - The server could not understand the request.";
     case 401:
-      return "Unauthorized: Authentication failed or user lacks necessary permissions.";
+      return "Unauthorized - Authentication failed or user lacks necessary permissions.";
     case 403:
-      return "Forbidden: The server understood the request, but refuses to authorize it.";
+      return "Forbidden - The server understood the request, but refuses to authorize it.";
     case 404:
-      return "Not Found: The requested resource could not be found on the server.";
+      return "Not Found - The requested resource could not be found on the server.";
     case 500:
-      return "Internal Server Error: The server encountered a situation it doesn't know how to handle.";
+      return "Internal Server Error - The server encountered a situation it doesn't know how to handle.";
     default:
-      return `HTTP error! Status: ${status}`;
+      return `HTTP error! Status - ${status}`;
   }
 };
     const handleSubmit = async (e) => {
@@ -58,7 +58,7 @@ try {
  } catch (error) {
     // Handle fetch or other errors
     console.error('Login failed', error);
-    alert("Login Failed " + error.message);
+    alert("Login Failed: " + error.message);
 }
 
     };
@@ -92,7 +92,7 @@ try {
  } catch (error) {
     // Handle fetch or other errors
     console.error('Registration failed', error);
-    alert("Registration Failed " + error.message);
+    alert("Registration Failed: " + error.message);
 
 }
 
