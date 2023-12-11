@@ -19,6 +19,8 @@ const getErrorMessage = (status) => {
       return "Bad Request - The server could not understand the request.";
     case 401:
       return "Unauthorized - Authentication failed or user lacks necessary permissions.";
+   	case 302:
+      return "Found - but not successful.";
     case 403:
       return "Forbidden - The server understood the request, but refuses to authorize it.";
     case 404:
@@ -29,6 +31,8 @@ const getErrorMessage = (status) => {
       return `HTTP error! Status - ${status}`;
   }
 };
+
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
 try {
@@ -46,7 +50,10 @@ try {
     if (!response.ok) {
         // Handle non-successful response, e.g., throw an error or handle accordingly
       throw new Error(getErrorMessage(response.status));
-    }
+    } else {
+		console.error("Login Succeded!");
+		alert("Login Succeded!");
+	}
 
     // Parse the JSON response
     const data = await response.json();
@@ -78,14 +85,17 @@ try {
             roles: inputRoles2
         }),
     });
+	console.log("response.status ==" + response.status);
 
-    if (!response.ok) {
+    if (!response.ok || response.status === 302) {
         // Handle non-successful response, e.g., throw an error or handle accordingly
       throw new Error(getErrorMessage(response.status));
     }
 
     // Parse the JSON response
     const data = await response.json();
+	console.error("Registration Succeded!");
+	alert("Registration Succeded!");
     setUserRoles(inputRoles2);
 
  
@@ -122,6 +132,8 @@ try {
             </form>
             </div>
             <br />
+            <div className="form-container">
+
             {roles.length > 0 && (
                 <div>
                     <h2>User Roles:</h2>
@@ -132,12 +144,17 @@ try {
                     </ul>
                 </div>
                )}
+			</div>
+            <br />
+            <div className="form-container">
 
+        <a href="http://localhost:8882/login/api/V1/logout" style={{ display: 'inline-block', padding: '10px', backgroundColor: 'rgb(255, 100, 100)', color: 'black', textDecoration: 'none', textAlign: 'center', borderRadius: '10px',border: '2px solid black' }}>
+         Logout
+        </a>
+
+            </div>
             <br />
-            <a href="http://localhost:8882/login/api/V1/logout">Logout</a>
-            <br />
-            <br />
-                  <div className="form-container">
+            <div className="form-container">
 
                <h1>Register</h1>
             <form onSubmit={registerSubmit}>
