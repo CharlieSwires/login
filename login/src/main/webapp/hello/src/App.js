@@ -100,6 +100,9 @@ try {
 
     return (
     <div className="App">
+      <div style={{ textAlign: 'center' }}>
+        <img src="IEEEHeader.png" alt="IEEEHeader.png" style={{ display: 'block', margin: 'auto' }} />
+      </div>
     	<br/>
           <div className="form-container">
 
@@ -159,7 +162,10 @@ try {
             </form>
             </div>
             <br />
- 
+      <div style={{ textAlign: 'center' }}>
+        <img src="IEEEFooter.png" alt="IEEEFooter.png" style={{ display: 'block', margin: 'auto' }} />
+      </div>
+
         </div>
     );
 };
