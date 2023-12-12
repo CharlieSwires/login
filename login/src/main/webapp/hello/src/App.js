@@ -19,7 +19,7 @@ const getErrorMessage = (status) => {
       return "Bad Request - The server could not understand the request.";
     case 401:
       return "Unauthorized - Authentication failed or user lacks necessary permissions.";
-   	case 302:
+    case 302:
       return "Found - but not successful.";
     case 403:
       return "Forbidden - The server understood the request, but refuses to authorize it.";

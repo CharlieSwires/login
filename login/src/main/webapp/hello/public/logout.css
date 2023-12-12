@@ -1,0 +1,34 @@
+/* Define your CSS styles here */
+body {
+  text-align: center;
+}
+
+.centered-image {
+  display: block;
+  margin: auto;
+}
+
+.form-container {
+  border: 2px solid #333;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  width: 50%;
+  margin: auto;
+  background-color: #9fcfff;
+}
+
+h1 {
+  font-size: 2em; /* Adjust as needed */
+  color: #000; /* Set your preferred text color */
+}
+
+.logout-link {
+  font-size: 2em; /* Adjust as needed */
+  color: blue; /* Set your preferred link color */
+  text-decoration: none;
+}
+
+.logout-link:hover {
+  text-decoration: underline; /* Add underline on hover */
+}
