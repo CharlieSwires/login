@@ -141,7 +141,7 @@ try {
             {roles.length > 0 && (
                 <div>
                     <h2>User Roles:</h2>
-                    <ul>
+                    <ul style={{ listStylePosition: 'inside' }}>
                         {roles.map((role, i) => (
                             <li key={i}>{role}</li>
                         ))}
