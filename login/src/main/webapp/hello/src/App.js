@@ -13,22 +13,22 @@ function App() {
         // This effect will run whenever userRoles change
         console.log('User roles have changed:', roles);
     }, [roles]); // Only run the effect when userRoles change
-const getErrorMessage = (status) => {
-  switch (status) {
-    case 400:
-      return "Bad Request - The server could not understand the request.";
-    case 401:
-      return "Unauthorized - Authentication failed or user lacks necessary permissions.";
-    case 302:
-      return "Found - but not successful.";
-    case 403:
-      return "Forbidden - The server understood the request, but refuses to authorize it.";
-    case 404:
-      return "Not Found - The requested resource could not be found on the server.";
-    case 500:
-      return "Internal Server Error - The server encountered a situation it doesn't know how to handle.";
-    default:
-      return `HTTP error! Status - ${status}`;
+	const getErrorMessage = (status) => {
+  	switch (status) {
+    	case 400:
+      		return "Bad Request - The server could not understand the request.";
+    	case 401:
+      		return "Unauthorized - Authentication failed or user lacks necessary permissions.";
+    	case 302:
+      		return "Found - but not successful.";
+    	case 403:
+      		return "Forbidden - The server understood the request, but refuses to authorize it.";
+    	case 404:
+      		return "Not Found - The requested resource could not be found on the server.";
+    	case 500:
+      		return "Internal Server Error - The server encountered a situation it doesn't know how to handle.";
+    	default:
+      		return `HTTP error! Status - ${status}`;
   }
 };
 
@@ -36,7 +36,7 @@ const getErrorMessage = (status) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 try {
- const response = await fetch('http://localhost:8882/login/api/V1/loginAttempt', {
+ 	const response = await fetch('http://localhost:8882/login/api/V1/loginAttempt', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -62,19 +62,19 @@ try {
     const roles2 = data.roles;
 
     setUserRoles(roles2);
- } catch (error) {
-    // Handle fetch or other errors
-    console.error('Login failed', error);
-    alert("Login Failed: " + error.message);
+ 	} catch (error) {
+    	// Handle fetch or other errors
+    	console.error('Login failed', error);
+    	alert("Login Failed: " + error.message);
 }
 
-    };
+};
     const registerSubmit = async (e) => {
         e.preventDefault();
     try {
-   const inputRoles2 = [roles3,roles4,roles5];
+   	const inputRoles2 = [roles3,roles4,roles5];
 	console.log("inputRoles2 "+inputRoles2);
- const response = await fetch('http://localhost:8882/login/api/V1/register', {
+ 	const response = await fetch('http://localhost:8882/login/api/V1/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -99,16 +99,16 @@ try {
     setUserRoles(inputRoles2);
 
  
- } catch (error) {
-    // Handle fetch or other errors
-    console.error('Registration failed', error);
-    alert("Registration Failed: " + error.message);
+	} catch (error) {
+    	// Handle fetch or other errors
+    	console.error('Registration failed', error);
+    	alert("Registration Failed: " + error.message);
 
 }
 
-    };
+};
 
-    return (
+return (
     <div className="App">
       <div style={{ textAlign: 'center' }}>
         <img src="IEEEHeader.png" alt="IEEEHeader.png" style={{ display: 'block', margin: 'auto' }} />
