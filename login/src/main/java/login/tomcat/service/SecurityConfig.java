@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public SecurityConfig(UserService userService, CustomUserDetailsService customUserDetailsService) {
 		this.userService = userService;
 		this.customUserDetailsService = customUserDetailsService;
-		Random rand = new Random(0);
+		Random rand = new Random(Long.parseLong(System.getenv("SALT_SEED")));
 		rand.nextBytes(salt1);
 		rand.nextBytes(salt2);
 		rand.nextBytes(salt3);
