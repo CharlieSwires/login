@@ -132,7 +132,7 @@ return (
                 <a href="http://localhost:8882/login/api/V1/logout" style={{ 
 					display: 'inline-block', padding: '5px', backgroundColor: 'rgb(255, 100, 100)', 
 					color: 'black', textDecoration: 'none', textAlign: 'center', borderRadius: '10px',
-					border: '2px solid black', margin: '5px'}}>
+					border: '2px solid black', margin: '5px', height: '40px'}}>
          		Logout
         		</a>
 
